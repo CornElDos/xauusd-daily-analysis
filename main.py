@@ -218,6 +218,8 @@ def schedule_daily_analysis():
         time.sleep(60)  # Check every minute
 
 if __name__ == "__main__":
+    # Start health check server
+    start_health_server()
     # Debug: print environment variables
     print(f"TEST_MODE value: '{os.getenv('TEST_MODE')}'")
     print(f"All env vars: {dict(os.environ)}")
