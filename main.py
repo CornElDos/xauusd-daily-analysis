@@ -197,10 +197,17 @@ def schedule_daily_analysis():
         time.sleep(60)  # Check every minute
 
 if __name__ == "__main__":
-    # For testing, run analysis immediately
-    if os.getenv('TEST_MODE') == 'true':
+    # Debug: print environment variables
+    print(f"TEST_MODE value: '{os.getenv('TEST_MODE')}'")
+    print(f"All env vars: {dict(os.environ)}")
+    
+    # Check for test mode (more robust checking)
+    test_mode = os.getenv('TEST_MODE', '').lower() in ['true', '1', 'yes']
+    
+    if test_mode:
+        print("🧪 Running in TEST MODE - executing analysis immediately")
         analyzer = XAUUSDAnalyzer()
         asyncio.run(analyzer.run_daily_analysis())
     else:
-        # Normal scheduled mode
+        print("📅 Running in SCHEDULED MODE - waiting for 07:30")
         schedule_daily_analysis()
