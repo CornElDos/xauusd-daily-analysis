@@ -10,6 +10,27 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from anthropic import Anthropic
 
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
+
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(b'XAUUSD Analysis Service - Running')
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+def start_health_server():
+    server = HTTPServer(('', int(os.getenv('PORT', 8080))), HealthHandler)
+    server_thread = threading.Thread(target=server.serve_forever)
+    server_thread.daemon = True
+    server_thread.start()
+    print(f"Health server started on port {os.getenv('PORT', 8080)}")
+
 class XAUUSDAnalyzer:
     def __init__(self):
         # Environment variables (set in Railway dashboard)
